@@ -27,7 +27,6 @@ set +x   # Uncomment this for debugging this shell script.
 ################################################################
 
 logFilePath="/var/log/nginx/access.log"
-today=$(date)
 
 #nginxlogsed=$(sed '/GET/' $logFilePath)
 
@@ -35,33 +34,37 @@ today=$(date)
 #          Define Functions here                               #
 ################################################################
 
-print_nginx_info(){
-	#sed '/GET/' $logFilePath > nginxlogSedInfo.txt
-	#cat nginxlogSedInfo.txt
+# print_nginx_info(){
+# 	#sed '/GET/' $logFilePath > nginxlogSedInfo.txt
+# 	#cat nginxlogSedInfo.txt
 
-	sed -n '/GET/p' $logFilePath > nginxlogSedInfo.txt
-	cat nginxlogSedInfo.txt
-}
+# 	sed -n '/GET/p' $logFilePath > nginxlogSedInfo.txt
+# 	cat nginxlogSedInfo.txt
+# }
 
-displayIPs() {
-	echo -e "\n all the IPs through which the request is thrown on $today are : "
-	#awk '{print $1}' nginxlogSedInfo.txt >> iphits.txt
-	#sed -r '/"[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"/' nginxlogSedInfo.txt
+# displayIPs() {
+# 	echo -e "\n all the IPs through which the request is thrown on $today are : "
+# 	#awk '{print $1}' nginxlogSedInfo.txt >> iphits.txt
+# 	#sed -r '/"[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}"/' nginxlogSedInfo.txt
 
-	#sed 's/.*\([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\).*/\1/' nginxlogSedInfo.txt
-	#cat iphitsSed.txt
+# 	#sed 's/.*\([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\).*/\1/' nginxlogSedInfo.txt
+# 	#cat iphitsSed.txt
 	
-	sed -n 's/.*\([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\).*/\1/1p' nginxlogSedInfo.txt
+# 	sed -n 's/.*\([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\).*/\1/1p' nginxlogSedInfo.txt
 
-	#sed -n 's/.*\([0-9][0-9]*G[0-9][0-9]*\).*/\1/p' nginxlogSedInfo.txt
-	rm nginxlogSedInfo.txt
+# 	#sed -n 's/.*\([0-9][0-9]*G[0-9][0-9]*\).*/\1/p' nginxlogSedInfo.txt
+# 	rm nginxlogSedInfo.txt
+# }
+
+getIPHits(){
+	sed -n '/GET/p' $logFilePath | sed -n 's/.*\(\(\(^\| \)[0-9]\{1,3\}\.\)\{1\}\([0-9]\{1,3\}\.\)\{2\}[0-9]\{1,3\}\) .*/\1/gp'
 }
 
 ################################################################
 #          Beginning of Main                                   #
 ################################################################
 
-print_nginx_info
-displayIPs
-
+# print_nginx_info
+# displayIPs
+getIPHits
 # End of script
